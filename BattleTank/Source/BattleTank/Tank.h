@@ -26,11 +26,34 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UFUNCTION(BlueprintCallable, Category = Tank)
+	void SetTankChildActor(UChildActorComponent* tankFromBP);
+
+	UFUNCTION(BlueprintCallable, Category = Tank)
 	void SetTurretChildActor(UChildActorComponent* TurretFromBP);
 
-private:
-	void RotateTurretR();
-	void RotateTurretL();
+	UFUNCTION(BlueprintCallable, Category = Tank)
+	void SetBarrelChildActor(UChildActorComponent* TurretFromBP);
 
-	UChildActorComponent* Turret;
+private:
+	UChildActorComponent* turret = nullptr;
+	UChildActorComponent* barrel = nullptr;
+	UChildActorComponent* tank = nullptr;
+
+	void RotateTurret(float);
+	void InclineBarrel(float);
+
+	void MoveTank(float speed);
+	void RotateTank(float speed);
+
+	UPROPERTY(EditAnywhere)
+	float rotationSpeed = 120.f;
+
+	UPROPERTY(EditAnywhere)
+	float movingSpeed = 120.f;
+
+	UPROPERTY(EditAnywhere)
+	float inclineSpeed = 120.f;
+
+	UPROPERTY(EditAnywhere)
+	float turretSpeed = 120.f;
 };

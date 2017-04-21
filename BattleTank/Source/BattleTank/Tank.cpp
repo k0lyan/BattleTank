@@ -12,6 +12,22 @@ ATank::ATank()
 
 }
 
+void ATank::SetTankChildActor(UChildActorComponent * tankFromBP)
+{
+	if (!tankFromBP) { return; }
+	tank = tankFromBP;
+}
+void ATank::SetTurretChildActor(UChildActorComponent * TurretFromBP)
+{
+	if (!TurretFromBP) { return; }
+	turret = TurretFromBP;
+}
+void ATank::SetBarrelChildActor(UChildActorComponent * barrelFromBP)
+{
+	if (!barrelFromBP) { return; }
+	barrel = barrelFromBP;
+}
+
 // Called when the game starts or when spawned
 void ATank::BeginPlay()
 {
@@ -22,31 +38,44 @@ void ATank::BeginPlay()
 void ATank::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 // Called to bind functionality to input
 void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-	InputComponent->BindAction("Turret_clockwise", IE_Pressed, this, &ATank::RotateTurretR);
-	InputComponent->BindAction("Turret_ñclockwise", IE_Pressed, this, &ATank::RotateTurretL);
+
+	InputComponent->BindAxis("Rotate_turret", this, &ATank::RotateTurret);
+	InputComponent->BindAxis("Incline_barrel", this, &ATank::InclineBarrel);
+
+	InputComponent->BindAxis("Move_tank", this, &ATank::MoveTank);
+	InputComponent->BindAxis("Rotate_tank", this, &ATank::RotateTank);
 }
 
-void ATank::RotateTurretL()
+void ATank::RotateTurret(float speed)
 {
-	UE_LOG(LogTemp, Warning, TEXT("LEFT"))
-	Turret->SetRelativeRotation(FRotator(0.f, -45.f, 0.f));
+	if (!turret) { return; }
+	float turretRotation = turretSpeed * speed * GetWorld()->GetDeltaSeconds();
+	turret->AddRelativeRotation(FRotator(0.f, turretRotation, 0.f));
 }
 
-void ATank::RotateTurretR()
+void ATank::InclineBarrel(float speed)
 {
-	UE_LOG(LogTemp, Warning, TEXT("RIGHT"))
-	Turret->SetRelativeRotation(FRotator(0.f, 45.f, 0.f));
+	if (!barrel) { return; }
+	float barrelInclineSpeed = speed* GetWorld()->GetDeltaSeconds() * inclineSpeed;
+	barrel->AddRelativeRotation(FRotator(barrelInclineSpeed, 0.f, 0.f));
 }
 
-void ATank::SetTurretChildActor(UChildActorComponent * TurretFromBP)
+void ATank::MoveTank(float speed)
 {
-	Turret = TurretFromBP;
+	if (!tank) { return; }
+	float moveSpeed = movingSpeed * speed * GetWorld()->GetDeltaSeconds();
+	tank->AddRelativeLocation( tank->GetForwardVector() * moveSpeed);
 }
 
+void ATank::RotateTank(float speed)
+{
+	if (!tank) { return; }
+	float rotation = speed * rotationSpeed * GetWorld()->GetDeltaSeconds();
+	tank->AddRelativeRotation(FRotator(0.f, rotation, 0.f));
+}
