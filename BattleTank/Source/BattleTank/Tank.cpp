@@ -10,6 +10,7 @@ ATank::ATank()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	TankAimingComponent = CreateDefaultSubobject<UTankAimingComponent>(FName("Aiming component"));
 }
 
 void ATank::SetTankChildActor(UChildActorComponent * tankFromBP)
@@ -78,4 +79,9 @@ void ATank::RotateTank(float speed)
 	if (!tank) { return; }
 	float rotation = speed * rotationSpeed * GetWorld()->GetDeltaSeconds();
 	tank->AddRelativeRotation(FRotator(0.f, rotation, 0.f));
+}
+
+void ATank::AimAt(FVector HitLocation)
+{
+	TankAimingComponent->AimAt(HitLocation);
 }

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "GameFramework/Pawn.h"
+#include "TankAimingComponent.h"
 #include "Tank.generated.h"
 
 UCLASS()
@@ -14,11 +15,6 @@ public:
 	// Sets default values for this pawn's properties
 	ATank();
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -33,6 +29,13 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = Tank)
 	void SetBarrelChildActor(UChildActorComponent* TurretFromBP);
+
+	void AimAt(FVector HitLocation);
+
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+	UTankAimingComponent* TankAimingComponent = nullptr;
 
 private:
 	UChildActorComponent* turret = nullptr;
