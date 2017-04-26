@@ -2,6 +2,7 @@
 
 #include "BattleTank.h"
 #include "TankBarrel.h"
+#include "TankTurret.h"
 #include "TankAimingComponent.h"
 
 
@@ -16,9 +17,14 @@ UTankAimingComponent::UTankAimingComponent()
 }
 
 
-void UTankAimingComponent::SetBarrellreference(UTankBarrel* barrelToSet)
+void UTankAimingComponent::SetBarrelReference(UTankBarrel* barrelToSet)
 {
 	barrel = barrelToSet;
+}
+
+void UTankAimingComponent::SetTurretReference(UTankTurret* TurretToSet)
+{
+	Turret = TurretToSet;
 }
 
 void UTankAimingComponent::AimAt(FVector HitLocation, float firingSpeed)
@@ -44,6 +50,7 @@ void UTankAimingComponent::AimAt(FVector HitLocation, float firingSpeed)
 		auto AimDirection = outLaunchVelocity.GetSafeNormal();
 		auto tankName = GetOwner()->GetName();
 		MoveBarrel(AimDirection);
+		RotateTurret(AimDirection);
 	}
 }
 
@@ -53,5 +60,14 @@ void UTankAimingComponent::MoveBarrel(FVector AimDirection)
 	auto AimAsRotator = AimDirection.Rotation();
 	auto DeltaRotator = AimAsRotator - BarrelRotation;
 
-	barrel->Elevate(5);
+	barrel->Elevate(DeltaRotator.Pitch);
+}
+
+void UTankAimingComponent::RotateTurret(FVector AimDirection)
+{
+	auto TurretRotation = Turret->GetForwardVector().Rotation();
+	auto AimAsRotator = AimDirection.Rotation();
+	auto DeltaRotator = AimAsRotator - TurretRotation;
+
+	Turret->Rotate(DeltaRotator.Yaw);
 }
