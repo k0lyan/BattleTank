@@ -9,12 +9,6 @@ void ATankPlayerController::BeginPlay()
 	Super::BeginPlay();
 
 	possesedTank = GetControlledTank();
-	
-	if (possesedTank)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("name: %s"), *(possesedTank->GetName()))
-	}
-
 }
 
 void ATankPlayerController::Tick(float DeltaTime)
@@ -56,8 +50,8 @@ bool ATankPlayerController::GetSightRayHitLocation(FVector& HitLocation) const
 		{
 			//UE_LOG(LogTemp, Warning, TEXT("hit location: %s"), *(HitLocation.ToString()))
 		}
-		
-		
+
+
 		//if (Hit.bBlockingHit)
 		//{
 		//	HitLocation = Hit.Location;
@@ -75,7 +69,7 @@ bool ATankPlayerController::GetLookDirection(FVector2D ScreenLocation, FVector& 
 	return DeprojectScreenPositionToWorld(ScreenLocation.X, ScreenLocation.Y, cameraWorldLocation, LookDirection);
 }
 
-bool ATankPlayerController::GetLookVectorHitLocation(FVector LookDirection, FVector& HitLocaction ) const
+bool ATankPlayerController::GetLookVectorHitLocation(FVector LookDirection, FVector& HitLocaction) const
 {
 	FHitResult Hit;
 
@@ -94,7 +88,7 @@ bool ATankPlayerController::GetLookVectorHitLocation(FVector LookDirection, FVec
 	{
 		HitLocaction = Hit.Location;
 	}
-	else 
+	else
 	{
 		HitLocaction = FVector(0);
 	}
