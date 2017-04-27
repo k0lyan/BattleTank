@@ -37,5 +37,8 @@ private:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UPROPERTY(EditAnywhere)
-	float firingSpeed = 500.f; //TODO set sensable firing speed
+	float firingSpeed = 4000.f;
+
+	UFUNCTION(BlueprintCallable, Category = TankActions)
+	void Fire();
 };
