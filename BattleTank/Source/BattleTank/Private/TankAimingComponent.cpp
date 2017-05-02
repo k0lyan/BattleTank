@@ -12,28 +12,20 @@ UTankAimingComponent::UTankAimingComponent()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = false; 
-
 	// ...
 }
 
-
-void UTankAimingComponent::SetBarrelReference(UTankBarrel* barrelToSet)
+void UTankAimingComponent::Initialise(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet)
 {
-	if (!barrelToSet) { return; }
-	barrel = barrelToSet;
-}
-
-void UTankAimingComponent::SetTurretReference(UTankTurret* TurretToSet)
-{
-	if (!TurretToSet) { return; }
+	Barrel = BarrelToSet;
 	Turret = TurretToSet;
 }
 
 void UTankAimingComponent::AimAt(FVector HitLocation, float firingSpeed)
 {
-	if (!barrel) { return; }
+	if (!ensure(Barrel || Turret)) { return; }
 	FVector outLaunchVelocity;
-	FVector startLocation = barrel->GetSocketLocation(FName("Projectile"));
+	FVector startLocation = Barrel->GetSocketLocation(FName("Projectile"));
 
 	//Calculate OutLaunchVelocity
 	bool bHaveAimSolution = UGameplayStatics::SuggestProjectileVelocity(
@@ -58,11 +50,11 @@ void UTankAimingComponent::AimAt(FVector HitLocation, float firingSpeed)
 
 void UTankAimingComponent::MoveBarrel(FVector AimDirection)
 {
-	auto BarrelRotation = barrel->GetForwardVector().Rotation();
+	auto BarrelRotation = Barrel->GetForwardVector().Rotation();
 	auto AimAsRotator = AimDirection.Rotation();
 	auto DeltaRotator = AimAsRotator - BarrelRotation;
 
-	barrel->Elevate(DeltaRotator.Pitch);
+	Barrel->Elevate(DeltaRotator.Pitch);
 }
 
 void UTankAimingComponent::RotateTurret(FVector AimDirection)
